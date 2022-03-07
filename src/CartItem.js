@@ -8,12 +8,12 @@
 
 "use strict";
 
-module.exports = class CartItem {
+class CartItem {
 
     //region private attributes
-    articleId;
-    quantity;
-    price;
+    #articleId;
+    #quantity;
+    #price;
     //endregion private attributes
 
     //region public methods
@@ -27,39 +27,67 @@ module.exports = class CartItem {
      * @exception InvalidPrice is thrown when the price is smaller than 10.
      */
     constructor(articleId, quantity, price) {
-        this.articleId = articleId;
-        this.quantity = quantity;
-        this.price = price;
-    }
-    /**
-     * @brief This property gets the article id
-     */
+            if(articleId<1) throw new InvalidArticleIdException("Invalid article id");
+            if(quantity<1) throw new InvalidQuantityException("Invalid quantity");
+            if(price<10) throw new InvalidPriceException("invalid price");
+            this.#articleId = articleId;
+            this.#quantity = quantity;
+            this.#price = price;
+        }
+        /**
+         * @brief This property gets the article id
+         */
     get articleId() {
-        return this.articleId;
+        return this.#articleId;
     }
 
     /**
      * @brief This property gets the quantity
      */
     get quantity() {
-        return this.quantity;
+        return this.#quantity;
+    }
+
+    set quantity(value) {
+        if(value<1) throw new InvalidQuantityException("Invalid quantity");
+        this.#quantity = value;
     }
 
     /**
      * @brief This property gets the price
      */
     get price() {
-        return this.price;
+        return this.#price;
     }
 
+    set price(price) {
+        if(price<10) throw new InvalidPriceException("invalid price")
+        this.#price = price
+
+
+    }
     /**
      * @brief This property gets the total
      */
     get total() {
-        return this.quantity * this.price;
-    }
-    //endregion public methods
+            return this.#quantity * this.#price;
+        }
+        //endregion public methods
 
     //region private methods
     //endregion private methods
 }
+
+
+class CartItemException extends Error {}
+
+class InvalidArticleIdException extends CartItemException {}
+
+ class InvalidQuantityException extends CartItemException {}
+
+ class InvalidPriceException extends CartItemException {}
+
+module.exports.CartItem = CartItem
+module.exports.InvalidArticleIdException = InvalidArticleIdException
+module.exports.InvalidQuantityException = InvalidQuantityException
+module.exports.InvalidPriceException = InvalidPriceException

@@ -8,10 +8,14 @@
 
 "use strict";
 
-module.exports = class Cart{
+
+class Cart {
+
+
 
     //region private attributes
     items = null;
+
     //endregion private attributes
 
 
@@ -19,27 +23,53 @@ module.exports = class Cart{
      * @brief This method constructs a Cart Object
      * @param items : list of cartItems
      */
-    constructor(items = null){
-        throw new Error('Method not implemented.');
+    constructor(items = null) {
+        this.items = items;
     }
 
     /**
      * @brief This property returns the list of CartItems presents in the Cart.
      * @exception EmptyCartException is thrown if the Cart is empty
      */
-    get items(){
-        throw new Error('Method not implemented.');
+    get items() {
+        throw new EmptyCartException();
     }
 
     /**
      * @brief This property returns the total of the Cart.
      * @exception EmptyCartException is thrown if the Cart is empty
      */
-    get totalPrice(){
-        throw new Error('Method not implemented.');
+    get totalPrice() {
+        throw new EmptyCartException();
     }
+
+    addItem(cartItem) {
+        this.items.push(cartItem);
+    }
+
+    removeItem(cartItem){
+        const index = this.items.indexOf(cartItem)
+        if(index > -1){
+            this.items.splice(index,1)
+        }else {
+            throw new NotFoundInCartException('Not found in Cart')
+        }
+    }
+
+    empty(){
+        this.items = []
+    }
+
     //endregion public methods
 
     //region private methods
     //endregion private methods
+
 }
+
+class CartException extends Error {}
+class NotFoundInCartException extends CartException {}
+
+module.exports.Cart = Cart
+module.exports.CartException = CartException
+module.exports.NotFoundInCartException = NotFoundInCartException
